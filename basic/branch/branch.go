@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"os"
 	"bufio"
+	"io"
+	"strings"
 )
 
 // go语言中的switch语句是没有break的，进入某个case执行完后，它会自动跳出switch代码块
@@ -45,9 +47,13 @@ func printFile(filename string) {
 		panic(err)
 	}
 
-	scanner := bufio.NewScanner(file)
+	printFileContent(file)
+}
+func printFileContent(reader io.Reader) {
 
-	// 打印输出每一行的信息
+	scanner := bufio.NewScanner(reader)
+
+	// print content with each line
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
 	}
@@ -59,7 +65,7 @@ func forever() {
 	}
 }
 func main() {
-	const filename = "abc.txt"
+	const filename = "basic/abc.txt"
 	if content, err := ioutil.ReadFile(filename); err != nil {
 		fmt.Println(err)
 	} else {
@@ -67,11 +73,19 @@ func main() {
 	}
 
 
-	fmt.Println(eval(3, 6, "*"))
+	//fmt.Println(eval(3, 6, "*"))
 	fmt.Println(grade(59), grade(69), grade(79), grade(89), grade(99))
 
 	fmt.Println(convertToBin(3))
 	fmt.Println(convertToBin(13))
-	printFile("abc.txt")
+	printFile("basic/abc.txt")
 	//forever()
+
+	s := `abccc
+	1234
+
+	kkk
+	bbb`
+
+	printFileContent(strings.NewReader(s))
 }
