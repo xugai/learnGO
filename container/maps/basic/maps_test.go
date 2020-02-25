@@ -35,7 +35,12 @@ func TestMaps(t *testing.T) {
 
 func BenchmarkFunc(b *testing.B) {
 	str := "你好徐秋冰徐改"
-	answer := 5
+
+	for i := 0; i < 13; i++ {
+		str = str + str
+	}
+
+	answer := 6
 	for i := 0; i < b.N; i++ {
 		if actual := getRepeatingSubStringLength(str); actual != answer {
 			b.Errorf("getRepeatingSubStringLength(%v) is incorrect, actual is %d, excepted is %d\n",

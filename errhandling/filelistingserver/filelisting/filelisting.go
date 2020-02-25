@@ -43,5 +43,3 @@ func FileList() func(writer http.ResponseWriter, request *http.Request) error {
 		return nil
 	}
 }
-
-// 2563663  居委会办公室联系电话
