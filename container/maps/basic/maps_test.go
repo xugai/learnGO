@@ -3,7 +3,7 @@ package basic
 import "testing"
 
 // golang中的表格驱动测试
-
+// 结构体里面的属性列表之间是不需要加逗号分隔开的
 func TestMaps(t *testing.T) {
 	tests := [] struct{
 		str string
