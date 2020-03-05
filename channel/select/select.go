@@ -70,7 +70,7 @@ func main() {
 		case activeWorker <- activeNum:
 			values = values[1:]
 		case <- time.After(800 * time.Millisecond):
-			fmt.Println("Time out!")	// 说明生产者(generator)的生产时间慢于0.8s
+			fmt.Println("Time out!")	// 如果该alert先打印出来的话，说明生产者(generator)的生产时间慢于0.8s
 		case <- tick:
 			fmt.Println("length of values:", len(values))
 		case <- tm:
