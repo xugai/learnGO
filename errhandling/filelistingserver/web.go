@@ -1,11 +1,11 @@
 package main
 
 import (
+	"learnGO/errhandling/filelistingserver/filelisting"
 	"net/http"
 	"os"
 	//"io/ioutil"
 	"log"
-	"./filelisting"
 )
 
 type appHandler func(writer http.ResponseWriter, request *http.Request) error

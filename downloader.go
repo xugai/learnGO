@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./infra"
+	"learnGO/infra"
 	//"./testing"
 	"fmt"
 )

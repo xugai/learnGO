@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
-	"bufio"
-	"./fio"
+	"learnGO/functional/fio"
 )
 
 func printIntWithReader(reader io.Reader) {

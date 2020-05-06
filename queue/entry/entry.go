@@ -1,8 +1,8 @@
 package main
 
 import (
-	".."
 	"fmt"
+	"learnGO/queue"
 )
 /*
 	有时候我们想对一个类型新增方法或者属性，也就是扩展现有类型，这有点像是JAVA里面的继承。
