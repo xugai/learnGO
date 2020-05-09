@@ -10,7 +10,6 @@ var seed = engine.Request{
 	ParserFunc: parser.ParseCityList,
 }
 
-
 func main() {
 	engine.Run(seed)
 }
