@@ -6,7 +6,11 @@ import (
 	"log"
 )
 
-func Run(seeds ... Request) {
+type SingleEngine struct {
+
+}
+
+func (s SingleEngine) Run(seeds ... Request) {
 	var requests [] Request
 	for _, seed := range seeds {
 		requests = append(requests, seed)
@@ -16,7 +20,6 @@ func Run(seeds ... Request) {
 		request := requests[0]
 		requests = requests[1:]
 
-		fmt.Printf("Fetching url: %s\n", request.Url)
 		result, err := worker(request)
 		if err != nil {
 			panic(err)
@@ -30,6 +33,7 @@ func Run(seeds ... Request) {
 }
 
 func worker(request Request) (ParseResult, error) {
+	log.Printf("Fetching url: %s\n", request.Url)
 	content, err := fetcher.Fetch(request.Url)
 	if err != nil {
 		log.Printf("Fetcher error: fetching Url %s:  %v", request.Url, err)

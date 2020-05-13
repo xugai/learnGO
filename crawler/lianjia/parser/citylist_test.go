@@ -16,9 +16,9 @@ func TestParseCityList(t *testing.T) {
 	}
 
 	expectedUrl := [] string {
-		"https://bj.lianjia.com/",
-		"https://sh.lianjia.com/",
-		"https://sz.lianjia.com/",
+		"https://bj.lianjia.com/zufang/",
+		"https://sh.lianjia.com/zufang/",
+		"https://sz.lianjia.com/zufang/",
 	}
 
 	expectedCity := [] string {

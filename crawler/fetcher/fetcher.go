@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func determineEncoding(r * bufio.Reader) encoding.Encoding {
@@ -28,8 +29,9 @@ func getUTF8Reader(r io.Reader, t transform.Transformer) * transform.Reader {
 	return newReader
 }
 
-
+var rateLimiter = time.Tick(100 * time.Millisecond)
 func Fetch(url string) ([] byte, error){
+	<- rateLimiter
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, errors.New("Request" + url + "error.")
