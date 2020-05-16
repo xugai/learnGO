@@ -15,7 +15,16 @@ func (s *SimpleScheduler) Submit(request engine.Request) {
 	//s.workerChannel <- request
 }
 
-func (s *SimpleScheduler) ConfigureWorkerChannel(in chan engine.Request) {
-	s.workerChannel = in
+func (s *SimpleScheduler) ConfigureWorkerChannel() chan engine.Request{
+	return s.workerChannel
 }
+
+func (s *SimpleScheduler) WorkerReady(requests chan engine.Request) {
+
+}
+
+func (s *SimpleScheduler) Run() {
+	s.workerChannel = make(chan engine.Request)
+}
+
 

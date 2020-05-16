@@ -1,47 +1,54 @@
 package engine
 
-import (
-	"log"
-)
-
 type ConcurrentEngine struct {
 	Scheduler Scheduler
 	WorkerCount int
+	ItemChannel chan interface{}
 }
 
 type Scheduler interface {
+	WorkerReadyNotifier
+	ConfigureWorkerChannel() chan Request
 	Submit(Request)
-	ConfigureWorkerChannel(in chan Request)
+	Run()
+}
+
+type WorkerReadyNotifier interface {
+	WorkerReady(chan Request)
 }
 
 func (c *ConcurrentEngine) Run(seeds ... Request) {
-	in := make(chan Request)
+	//in := make(chan Request)
 	out := make(chan ParseResult)
-	c.Scheduler.ConfigureWorkerChannel(in)
+	c.Scheduler.Run()
+	//c.Scheduler.ConfigureWorkerChannel(in)
 
 	for i := 0; i < c.WorkerCount; i++ {
-		createWorker(in, out)
+		createWorker(c.Scheduler.ConfigureWorkerChannel(), out, c.Scheduler)
 	}
 
 	for _, seed := range seeds {
 		c.Scheduler.Submit(seed)
 	}
-	itemCount := 0
+
 	for {
 		result := <- out
 		for _, item := range result.Items {
-			log.Printf("Got #%d item %v\n", itemCount, item)
-			itemCount++
+			go doPersist(item, c.ItemChannel)
 		}
 		for _, request := range result.Requests {
+			if ifDumplicate(request.Url) {
+				continue
+			}
 			c.Scheduler.Submit(request)
 		}
 	}
 }
 
-func createWorker(in chan Request, out chan ParseResult) {
+func createWorker(in chan Request, out chan ParseResult, n WorkerReadyNotifier) {
 	go func() {
 		for  {
+			n.WorkerReady(in)
 			request := <- in
 			result, err := worker(request)
 			if err != nil {
@@ -50,4 +57,17 @@ func createWorker(in chan Request, out chan ParseResult) {
 			out <- result
 		}
 	}()
+}
+
+var visitedUrl = map[string]bool{}
+func ifDumplicate(url string) bool {
+	if visitedUrl[url] {
+		return true
+	}
+	visitedUrl[url] = true
+	return false
+}
+
+func doPersist(item interface{}, itemChannel chan interface{}) {
+	itemChannel <- item
 }

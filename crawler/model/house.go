@@ -2,6 +2,7 @@ package model
 
 type House struct {
 	Name string
+	Rent string
 	Area string
 	Towards string
 	Maintain string
