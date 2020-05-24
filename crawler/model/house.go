@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 type House struct {
 	Name string
 	Rent string
@@ -16,4 +18,14 @@ type House struct {
 	Heating string
 	LeaseTerm string
 	HouseVisit string
+}
+
+func ConvertToHouseFromjsonObj(obj interface{}) (House, error) {
+	jsonStr, err := json.Marshal(obj)
+	if err != nil {
+		panic(err)
+	}
+	var house House
+	err = json.Unmarshal(jsonStr, &house)
+	return house, err
 }

@@ -7,33 +7,44 @@ import (
 )
 
 func TestParseHouse(t *testing.T) {
-	content, err := ioutil.ReadFile("house_test_data.html")
+	content, err := ioutil.ReadFile("house_test_data.txt")
 	if err != nil {
 		panic(err)
 	}
 
 	expectedResult := model.House{
-		Name: "整租·北正街 1室1厅 南/北",
-		Area: "面积：40㎡",
-		Towards: "朝向：南 北",
-		Maintain: "维护：5天前",
-		CheckIn: "入住：随时入住",
-		Floor: "楼层：高楼层/6层",
-		Elevator: "电梯：无",
-		ParkingSpace: "车位：暂无数据",
-		WaterUsed: "用水：暂无数据",
-		ElectricityUsed: "用电：暂无数据",
-		GasUsed: "燃气：暂无数据",
-		Heating: "采暖：暂无数据",
-		LeaseTerm: "租期：暂无数据",
-		HouseVisit: "看房：需提前预约",
+		Name: "整租·欣葆家园一区 1室1厅 南",
+		Rent: "4000元/月",
+		Area: "50㎡",
+		Towards: "南",
+		Maintain: "1天前",
+		CheckIn: "随时入住",
+		Floor: "高楼层/15层",
+		Elevator: "有",
+		ParkingSpace: "暂无数据",
+		WaterUsed: "暂无数据",
+		ElectricityUsed: "暂无数据",
+		GasUsed: "暂无数据",
+		Heating: "暂无数据",
+		LeaseTerm: "暂无数据",
+		HouseVisit: "需提前预约",
 	}
 
-	result := ParseHouse(content, "整租·北正街 1室1厅 南/北")
-	if len(result.Items) == 0 {
-		t.Errorf("Expected result.Items' length is 1, but get 0")
+	result := ParseHouse(content,
+					"整租·欣葆家园一区 1室1厅 南",
+					"4000元/月",
+					"https://bj.lianjia.com//zufang/BJ2518580725339930624.html",
+					"BJ2518580725339930624")
+
+	if len(result.Items) != 1 {
+		t.Errorf("Expected result.Items' length is 1, but get %v\n", len(result.Items))
 	}
-	if result.Items[0].(model.House) != expectedResult {
-		t.Errorf("Expected result is %v, but get %v", expectedResult, result.Items[0])
+	if len(result.Requests) != 5 {
+		t.Errorf("Expected result.Requests' length is 5, but get %v\n", len(result.Requests))
 	}
+	if result.Items[0].Payload.(model.House) != expectedResult {
+		t.Errorf("Expected result is %v, but get %v\n", expectedResult, result.Items[0])
+	}
+
+
 }

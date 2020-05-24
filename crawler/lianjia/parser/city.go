@@ -42,7 +42,6 @@ func ParseCity(content [] byte) engine.ParseResult {
 
 	prefixUrlMatches := prefixUrlR.FindAllSubmatch(content, -1)
 	mainHouseMatches := mainHouseR.FindAllSubmatch(content, -1)
-	//streetmatches := streetR.FindAllSubmatch(content, -1)
 	priceMatches := priceR.FindAllSubmatch(content, -1)
 	pageMatch := pageR.FindSubmatch(content)
 	result := engine.ParseResult{}
@@ -51,11 +50,11 @@ func ParseCity(content [] byte) engine.ParseResult {
 	for i, m := range mainHouseMatches {
 		houseName := string(m[2])
 		rent := string(priceMatches[i][1]) + "元/月"
+		url := "https://" + string(prefixUrlMatches[0][1]) + string(m[1])
+		id := StringExtractor(string(m[1]), `/zufang/([^\.]+).html`)
 		result.Requests = append(result.Requests, engine.Request{
-			Url: "https://" + string(prefixUrlMatches[0][1]) + string(m[1]),
-			ParserFunc: func(bytes []byte) engine.ParseResult {
-				return ParseHouse(bytes, houseName, rent)
-			},
+			Url: url,
+			ParserFunc: getParseHouseFunc(houseName, rent, url, id),
 		})
 
 		//result.Items = append(result.Items,
@@ -80,4 +79,10 @@ func GetNextPage(currPage string) string {
 	}
 	a := strconv.Itoa(i + 1)
 	return a
+}
+
+func getParseHouseFunc(houseName string, rent string, url string, id string) func([] byte) engine.ParseResult {
+	return func(bytes []byte) engine.ParseResult {
+		return ParseHouse(bytes, houseName, rent, url, id)
+	}
 }

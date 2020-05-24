@@ -3,7 +3,7 @@ package engine
 type ConcurrentEngine struct {
 	Scheduler Scheduler
 	WorkerCount int
-	ItemChannel chan interface{}
+	ItemChannel chan Item
 }
 
 type Scheduler interface {
@@ -68,6 +68,6 @@ func ifDumplicate(url string) bool {
 	return false
 }
 
-func doPersist(item interface{}, itemChannel chan interface{}) {
+func doPersist(item Item, itemChannel chan Item) {
 	itemChannel <- item
 }
