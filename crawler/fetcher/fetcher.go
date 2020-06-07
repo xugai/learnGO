@@ -10,6 +10,7 @@ import (
 	"golang.org/x/text/transform"
 	"io"
 	"io/ioutil"
+	"learnGO/crawler_distributed/config"
 	"net/http"
 	"time"
 )
@@ -29,7 +30,7 @@ func getUTF8Reader(r io.Reader, t transform.Transformer) * transform.Reader {
 	return newReader
 }
 
-var rateLimiter = time.Tick(100 * time.Millisecond)
+var rateLimiter = time.Tick(time.Second / config.QPS)
 func Fetch(url string) ([] byte, error){
 	<- rateLimiter
 	request, _ := http.NewRequest(http.MethodGet, url, nil)

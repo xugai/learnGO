@@ -54,7 +54,7 @@ func ParseCity(content [] byte) engine.ParseResult {
 		id := StringExtractor(string(m[1]), `/zufang/([^\.]+).html`)
 		result.Requests = append(result.Requests, engine.Request{
 			Url: url,
-			ParserFunc: getParseHouseFunc(houseName, rent, url, id),
+			Parser: NewHouseParser(houseName, rent, url, id),
 		})
 
 		//result.Items = append(result.Items,
@@ -66,7 +66,7 @@ func ParseCity(content [] byte) engine.ParseResult {
 	if len(pageMatch) > 0 {
 		result.Requests = append(result.Requests, engine.Request{
 			Url: "https://" + string(prefixUrlMatches[0][1]) + "/zufang/" + "pg" + GetNextPage(string(pageMatch[1])),
-			ParserFunc: ParseCity,
+			Parser: engine.NewFuncParser(ParseCity, "ParseCity"),
 		})
 	}
 	return result
@@ -86,3 +86,34 @@ func getParseHouseFunc(houseName string, rent string, url string, id string) fun
 		return ParseHouse(bytes, houseName, rent, url, id)
 	}
 }
+
+type HouseParser struct {
+	houseName string
+	rent string
+	url string
+	id string
+}
+
+func (h *HouseParser) Parse(bytes []byte) engine.ParseResult {
+	return ParseHouse(bytes, h.houseName, h.rent, h.url, h.id)
+}
+
+func (h *HouseParser) Serialize() (name string, args []interface{}) {
+	return "ParseHouse", [] interface{} {
+		h.houseName,
+		h.rent,
+		h.url,
+		h.id,
+	}
+}
+
+func NewHouseParser(houseName string, rent string, url string, id string) *HouseParser {
+	return &HouseParser{
+		houseName: houseName,
+		rent: rent,
+		url: url,
+		id: id,
+	}
+}
+
+

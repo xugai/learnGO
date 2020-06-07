@@ -20,7 +20,7 @@ func (s SingleEngine) Run(seeds ... Request) {
 		request := requests[0]
 		requests = requests[1:]
 
-		result, err := worker(request)
+		result, err := Worker(request)
 		if err != nil {
 			panic(err)
 		}
@@ -32,13 +32,13 @@ func (s SingleEngine) Run(seeds ... Request) {
 	}
 }
 
-func worker(request Request) (ParseResult, error) {
+func Worker(request Request) (ParseResult, error) {
 	//log.Printf("Fetching url: %s\n", request.Url)
 	content, err := fetcher.Fetch(request.Url)
 	if err != nil {
 		log.Printf("Fetcher error: fetching Url %s:  %v", request.Url, err)
 		return ParseResult{}, err
 	}
-	result := request.ParserFunc(content)
+	result := request.Parser.Parse(content)
 	return result, nil
 }

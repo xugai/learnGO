@@ -36,7 +36,7 @@ func TestSaver(t *testing.T) {
 
 	// save test data to elastic search engine
 	client, _ := elastic.NewClient(elastic.SetSniff(false))
-	_, err := save(client, expectedItem)
+	_, err := Save(client, expectedItem)
 	if err != nil {
 		panic(err)
 	}

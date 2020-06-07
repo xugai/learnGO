@@ -71,7 +71,7 @@ func ParseHouse(content [] byte, name string, rent string, url string, id string
 			id := StringExtractor(string(recommendMatch[1]), `/zufang/([^\.]+).html`)
 			result.Requests = append(result.Requests, engine.Request{
 				Url: url,
-				ParserFunc: getParseHouseFunc(houseName, rent, url, id),
+				Parser: NewHouseParser(houseName, rent, url, id),
 			})
 		}
 	}
@@ -83,7 +83,7 @@ func ParseHouse(content [] byte, name string, rent string, url string, id string
 			id := StringExtractor(string(recommendMatch2[1]), `/zufang/([^\.]+).html`)
 			result.Requests = append(result.Requests, engine.Request{
 				Url: url,
-				ParserFunc: getParseHouseFunc(houseName, rent, url, id),
+				Parser: NewHouseParser(houseName, rent, url, id),
 			})
 		}
 	}

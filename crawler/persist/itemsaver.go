@@ -7,6 +7,10 @@ import (
 	"log"
 )
 
+/**
+	docker run elastic command: docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+ */
+
 func ItemSaver(client *elastic.Client) chan engine.Item {
 	itemChannel := make(chan engine.Item)
 	itemCount := 1
@@ -17,7 +21,7 @@ func ItemSaver(client *elastic.Client) chan engine.Item {
 			itemCount++
 
 			// save item into elastic search engine
-			_, err := save(client, item)
+			_, err := Save(client, item)
 			if err != nil {
 				log.Printf("Save item %v failed. error: %v\n", item, err)
 			}
@@ -26,7 +30,7 @@ func ItemSaver(client *elastic.Client) chan engine.Item {
 	return itemChannel
 }
 
-func save(client *elastic.Client, item engine.Item) (id string, err error){
+func Save(client *elastic.Client, item engine.Item) (id string, err error){
 	// set sniff to false, because we run our elastic search single instance in docker.
 	indexService := client.Index().
 		Index("dating_house").

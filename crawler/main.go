@@ -11,8 +11,8 @@ import (
 // 183.48.244.8
 
 var seed = engine.Request{
-	Url: 		"https://cq.lianjia.com/zufang/",
-	ParserFunc: parser.ParseCity,
+	Url: 		"https://cd.lianjia.com/zufang/",
+	Parser: 	engine.NewFuncParser(parser.ParseCity, "ParseCity"),
 }
 
 func main() {
@@ -26,6 +26,7 @@ func main() {
 		Scheduler: &scheduler.QueuedScheduler{},
 		WorkerCount: 5,
 		ItemChannel: persist.ItemSaver(client),
+		RequestProcessor: engine.Worker,
 	}
 	engine.Run(seed)
 }
